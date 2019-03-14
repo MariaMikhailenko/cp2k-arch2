@@ -21,17 +21,18 @@ CFLAGS   = $(DFLAGS) -O0
 FCFLAGS  = $(DFLAGS) -O0 -xCORE-AVX2 -funroll-loops -fpp -free
 FCFLAGS += -fp-model precise
 FCFLAGS += -g -traceback
-FCFLAGS += -I$(INTEL_MKL)/include -I$(INTEL_MKL)/include/fftw
-FCFLAGS += -I$(LIBXC)/include
+FCFLAGS += -I$(INTEL_MKL)/include -I$(INTEL_MKL)/include/fftw -I$(INTEL_MKL)/include/intel64/lp64
+FCFLAGS += -I$(LIBXC)/include -I$(LIBINT)/include -I$(LIBINT)/include/libderiv -I$(LIBINT)/include/libint
 LDFLAGS  = $(FCFLAGS) -static-intel -L$(LIBXC)/lib -L$(LIBINT)/lib
 LDFLAGS_C = $(FCFLAGS) -static-intel -nofor_main
 LIBS     = $(LIBXC)/lib/libxcf03.a \
-        += $(LIBXC)/lib/libxc.a
+           $(LIBXC)/lib/libxc.a
 LIBS    += $(LIBINT)/lib/libderiv.a \
-        += $(LIBINT)/lib/libint.a  -lstdc++
+           $(LIBINT)/lib/libint.a -lstdc++
 LIBS    += -Wl,--start-group \
            $(MKL_LIB)/libmkl_intel_lp64.a $(MKL_LIB)/libmkl_sequential.a \
-           $(MKL_LIB)/libmkl_core.a -Wl,--end-group -lm
+           $(MKL_LIB)/libmkl_core.a \
+           -Wl,--end-group -lm
 
 # Required due to memory leak that occurs if high optimisations are used
 #mp2_optimize_ri_basis.o: mp2_optimize_ri_basis.F
