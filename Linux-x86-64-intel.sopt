@@ -13,25 +13,24 @@ FC       = ifort
 LD       = ifort
 AR       = ar -r
 CPPFLAGS =
-DFLAGS   = -D__MKL -D__FFTW3 -D__HAS_NO_SHARED_GLIBC \
+DFLAGS   = -D__MKL -D__FFTW3 \
 	   -D__LIBXC \
            -D__LIBINT -D__LIBINT_MAX_AM=7 -D__LIBDERIV_MAX_AM1=6 \
            -D__MAX_CONTR=4
-CFLAGS   = $(DFLAGS) -O2
-FCFLAGS  = $(DFLAGS) -O2 -funroll-loops -fpp -free
+CFLAGS   = $(DFLAGS) -O0
+FCFLAGS  = $(DFLAGS) -O0 -xCORE-AVX2 -funroll-loops -fpp -free
 FCFLAGS += -fp-model precise
 FCFLAGS += -g -traceback
-FCFLAGS += -I${MKLROOT}/include -I${MKLROOT}/include/fftw
+FCFLAGS += -I$(INTEL_MKL)/include -I$(INTEL_MKL)/include/fftw
 FCFLAGS += -I$(LIBXC)/include
 LDFLAGS  = $(FCFLAGS) -static-intel
 LDFLAGS_C = $(FCFLAGS) -static-intel -nofor_main
-MKL_LIB  = ${MKLROOT}/lib/intel64
 LIBS     = -Wl,--start-group \
-           $(MKL_LIB)/libmkl_intel_lp64.a ${MKL_LIB}/libmkl_sequential.a \
-           $(MKL_LIB)/libmkl_core.a -Wl,--end-group -lpthread -lm
+           $(MKL_LIB)/libmkl_intel_lp64.a $(MKL_LIB)/libmkl_sequential.a \
+           $(MKL_LIB)/libmkl_core.a -Wl,--end-group -lm
 LIBS    += -L$(LIBXC)/lib -lxcf03 -lxc
 LIBS    += -L$(LIBINT)/lib -lderiv -lint -lstdc++
 
 # Required due to memory leak that occurs if high optimisations are used
-mp2_optimize_ri_basis.o: mp2_optimize_ri_basis.F
-			 $(FC) -c $(subst O2,O0,$(FCFLAGS)) $<
+#mp2_optimize_ri_basis.o: mp2_optimize_ri_basis.F
+#			 $(FC) -c $(subst O2,O0,$(FCFLAGS)) $<
