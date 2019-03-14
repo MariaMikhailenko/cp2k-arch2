@@ -23,10 +23,10 @@ FCFLAGS += -fp-model precise
 FCFLAGS += -g -traceback
 FCFLAGS += -I$(INTEL_MKL)/include -I$(INTEL_MKL)/include/fftw
 FCFLAGS += -I$(LIBXC)/include
-LDFLAGS  = $(FCFLAGS) -static-intel
+LDFLAGS  = $(FCFLAGS) -static-intel -L$(LIBXC)/lib -L$(LIBINT)/lib
 LDFLAGS_C = $(FCFLAGS) -static-intel -nofor_main
-LIBS     = -L$(LIBXC)/lib -lxcf03 -lxc
-LIBS    += -L$(LIBINT)/lib -lderiv -lint -lstdc++
+LIBS     = -lxcf03 -lxc
+LIBS    += -lderiv -lint -lstdc++
 LIBS    += -Wl,--start-group \
            $(MKL_LIB)/libmkl_intel_lp64.a $(MKL_LIB)/libmkl_sequential.a \
            $(MKL_LIB)/libmkl_core.a -Wl,--end-group -lm
