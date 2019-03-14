@@ -25,8 +25,10 @@ FCFLAGS += -I$(INTEL_MKL)/include -I$(INTEL_MKL)/include/fftw
 FCFLAGS += -I$(LIBXC)/include
 LDFLAGS  = $(FCFLAGS) -static-intel -L$(LIBXC)/lib -L$(LIBINT)/lib
 LDFLAGS_C = $(FCFLAGS) -static-intel -nofor_main
-LIBS     = -lxcf03 -lxc
-LIBS    += -lderiv -lint -lstdc++
+LIBS     = $(LIBXC)/lib/libxcf03.a \
+        += $(LIBXC)/lib/libxc.a
+LIBS    += $(LIBINT)/lib/libderiv.a \
+        += $(LIBINT)/lib/libint.a  -lstdc++
 LIBS    += -Wl,--start-group \
            $(MKL_LIB)/libmkl_intel_lp64.a $(MKL_LIB)/libmkl_sequential.a \
            $(MKL_LIB)/libmkl_core.a -Wl,--end-group -lm
